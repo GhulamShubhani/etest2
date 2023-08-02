@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import * as Yup from 'yup';
 import { Link as RouterLink } from 'react-router-dom';
 // form
@@ -7,6 +7,10 @@ import { yupResolver } from '@hookform/resolvers/yup';
 // @mui
 import { Link, Stack, Alert, IconButton, InputAdornment } from '@mui/material';
 import { LoadingButton } from '@mui/lab';
+
+import UAParser from "ua-parser-js";
+import { useSelector, useDispatch } from "react-redux";
+import { UserActions } from "../../store/User";
 // routes
 import { PATH_AUTH } from '../../routes/paths';
 // auth
@@ -20,6 +24,38 @@ import FormProvider, { RHFTextField } from '../../components/hook-form';
 export default function AuthLoginForm() {
   const { login } = useAuthContext();
 
+  const [fcmToken, setfcmToken] = useState("AE")
+  const [deviceCountryData, setDeviceCountryData] = useState([])
+  const [deviceIdentifier, setDeviceIdentifier] = useState([])
+  
+
+  
+  useEffect(() => {
+    // Retrieve device name
+    const parser = new UAParser();
+    const userAgent = parser.getResult();
+    console.log(userAgent,"userAgent");
+    setDeviceIdentifier(userAgent)
+    // dispatch(SignupActions.deviceName(userAgent.device.model))
+
+    // Retrieve country code
+    const fetchCountryCode = async () => {
+      try {
+        const response = await fetch("https://ipapi.co/json/");
+        const data = await response.json();
+        setDeviceCountryData(data)
+        console.log("data,",data);
+
+        // dispatch(SignupActions.deviceCountryCode(data.country_code))
+      } catch (error) {
+        console.log("Error retrieving country code:", error);
+      }
+    };
+
+    fetchCountryCode();
+  }, []);
+
+  
   const [showPassword, setShowPassword] = useState(false);
 
   const LoginSchema = Yup.object().shape({
@@ -28,8 +64,8 @@ export default function AuthLoginForm() {
   });
 
   const defaultValues = {
-    email: 'demo@minimals.cc',
-    password: 'demo1234',
+    email: 'ghulam.shubhani00000@gmail.com',
+    password: 'Shubhani@123',
   };
 
   const methods = useForm({
@@ -45,8 +81,14 @@ export default function AuthLoginForm() {
   } = methods;
 
   const onSubmit = async (data) => {
+    const device= {
+      fcmToken,
+      deviceCountryData,
+      deviceIdentifier,
+    }
+  
     try {
-      await login(data.email, data.password);
+      await login(data.email, data.password,device);
     } catch (error) {
       console.error(error);
       reset();

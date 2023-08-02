@@ -1,10 +1,13 @@
 import PropTypes from 'prop-types';
-import { createContext, useEffect, useReducer, useCallback, useMemo } from 'react';
+import { createContext, useEffect, useReducer, useCallback, useMemo, useState } from 'react';
+
 // utils
 import axios from '../utils/axios';
 import localStorageAvailable from '../utils/localStorageAvailable';
 //
 import { isValidToken, setSession } from './utils';
+
+
 
 // ----------------------------------------------------------------------
 
@@ -111,12 +114,19 @@ export function AuthProvider({ children }) {
     initialize();
   }, [initialize]);
 
+ 
+
+
   // LOGIN
-  const login = useCallback(async (email, password) => {
-    const response = await axios.post('/api/account/login', {
+  const login = useCallback(async (email, password,device) => {
+    console.log(email, password,device,"email, password,device");
+    const response = await axios.post('http://localhost:8000/user/login',  {
       email,
       password,
+      device
     });
+    console.log(response,"response");
+    // const user = "user"
     const { accessToken, user } = response.data;
 
     setSession(accessToken);
