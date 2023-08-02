@@ -12,8 +12,23 @@ const Loadable = (Component) => (props) =>
   );
 
 // ----------------------------------------------------------------------
+// AUTH
+export const LoginPage = Loadable(lazy(() => import('../pages/auth/LoginPage')));
+export const RegisterPage = Loadable(lazy(() => import('../pages/auth/RegisterPage')));
+export const VerifyCodePage = Loadable(lazy(() => import('../pages/auth/VerifyCodePage')));
+export const NewPasswordPage = Loadable(lazy(() => import('../pages/auth/NewPasswordPage')));
+export const ResetPasswordPage = Loadable(lazy(() => import('../pages/auth/ResetPasswordPage')));
 
-export const LoginPage = Loadable(lazy(() => import('../pages/LoginPage')));
+
+// TEST RENDER PAGE BY ROLE
+export const PermissionDeniedPage = Loadable(
+  lazy(() => import('../pages/dashboard/PermissionDeniedPage'))
+);
+
+// BLANK PAGE
+export const BlankPage = Loadable(lazy(() => import('../pages/dashboard/BlankPage')));
+
+
 
 export const PageOne = Loadable(lazy(() => import('../pages/PageOne')));
 export const PageTwo = Loadable(lazy(() => import('../pages/PageTwo')));

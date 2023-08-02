@@ -9,13 +9,23 @@ import DashboardLayout from '../layouts/dashboard';
 import { PATH_AFTER_LOGIN } from '../config-global';
 //
 import {
+  // Auth
+  LoginPage,
+  RegisterPage,
+  VerifyCodePage,
+  NewPasswordPage,
+  ResetPasswordPage,
+  //
+  BlankPage,
+  PermissionDeniedPage,
+  //
   Page404,
   PageOne,
   PageTwo,
   PageSix,
   PageFour,
   PageFive,
-  LoginPage,
+  // LoginPage,
   PageThree,
 } from './elements';
 
@@ -23,10 +33,24 @@ import {
 
 export default function Router() {
   return useRoutes([
+    // {
+    //   path: '/',
+    //   children: [
+    //     { element: <Navigate to={PATH_AFTER_LOGIN} replace />, index: true },
+    //     {
+    //       path: 'login',
+    //       element: (
+    //         <GuestGuard>
+    //           <LoginPage />
+    //         </GuestGuard>
+    //       ),
+    //     },
+    //   ],
+    // },
+     // Auth
     {
-      path: '/',
+      path: 'auth',
       children: [
-        { element: <Navigate to={PATH_AFTER_LOGIN} replace />, index: true },
         {
           path: 'login',
           element: (
@@ -34,6 +58,24 @@ export default function Router() {
               <LoginPage />
             </GuestGuard>
           ),
+        },
+        {
+          path: 'register',
+          element: (
+            <GuestGuard>
+              <RegisterPage />
+            </GuestGuard>
+          ),
+        },
+        { path: 'login-unprotected', element: <LoginPage /> },
+        { path: 'register-unprotected', element: <RegisterPage /> },
+        {
+          element: <CompactLayout />,
+          children: [
+            { path: 'reset-password', element: <ResetPasswordPage /> },
+            { path: 'new-password', element: <NewPasswordPage /> },
+            { path: 'verify', element: <VerifyCodePage /> },
+          ],
         },
       ],
     },
