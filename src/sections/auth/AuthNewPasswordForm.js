@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import * as Yup from 'yup';
 import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
 // form
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
@@ -25,6 +26,12 @@ export default function AuthNewPasswordForm() {
 
   const emailRecovery =
     typeof window !== 'undefined' ? sessionStorage.getItem('email-recovery') : '';
+  const otpIdRecovery =
+    typeof window !== 'undefined' ? sessionStorage.getItem('otpId-recovery') : '';
+
+
+    console.log(emailRecovery,"emailRecovery");
+    console.log(otpIdRecovery,"otpIdRecovery");
 
   const VerifyCodeSchema = Yup.object().shape({
     code1: Yup.string().required('Code is required'),
@@ -65,14 +72,25 @@ export default function AuthNewPasswordForm() {
     formState: { isSubmitting, errors },
   } = methods;
 
-  const onSubmit = async (data) => {
+  const onSubmit = async (data1) => {
     try {
       await new Promise((resolve) => setTimeout(resolve, 500));
-      console.log('DATA:', {
-        email: data.email,
-        code: `${data.code1}${data.code2}${data.code3}${data.code4}${data.code5}${data.code6}`,
-        password: data.password,
+      console.log('DATA1:', {
+        email: data1.email,
+        code: `${data1.code1}${data1.code2}${data1.code3}${data1.code4}${data1.code5}${data1.code6}`,
+        password: data1.password,
       });
+      const {data} = await axios.post(
+        "https://vast-cyan-peacock-toga.cyclic.app/user/forgetpassword",
+        // "http://192.168.1.6:8000/user/forgetpassword",
+        { 
+          emailCode: `${data1.code1}${data1.code2}${data1.code3}${data1.code4}${data1.code5}${data1.code6}`,
+          password: data1.password,
+          email:data1.email,
+          OtpId:otpIdRecovery
+        }
+        );
+        console.log(data,"dataforgetpassword");
       sessionStorage.removeItem('email-recovery');
       enqueueSnackbar('Change password success!');
       navigate(PATH_DASHBOARD.root);

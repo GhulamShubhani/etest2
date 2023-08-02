@@ -120,7 +120,8 @@ export function AuthProvider({ children }) {
   // LOGIN
   const login = useCallback(async (email, password,device) => {
     console.log(email, password,device,"email, password,device");
-    const response = await axios.post('http://localhost:8000/user/login',  {
+    // const response = await axios.post('http://localhost:8000/user/login',  {
+    const response = await axios.post('https://vast-cyan-peacock-toga.cyclic.app/user/login',  {
       email,
       password,
       device

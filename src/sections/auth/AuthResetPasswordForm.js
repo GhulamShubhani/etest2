@@ -1,5 +1,6 @@
 import * as Yup from 'yup';
 import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
 // form
 import { yupResolver } from '@hookform/resolvers/yup';
 import { useForm } from 'react-hook-form';
@@ -29,10 +30,20 @@ export default function AuthResetPasswordForm() {
     formState: { isSubmitting },
   } = methods;
 
-  const onSubmit = async (data) => {
+  const onSubmit = async (emailData) => {
     try {
+      const {data} = await axios.post(
+        "https://vast-cyan-peacock-toga.cyclic.app/user/sendotp",
+        // "http://192.168.1.6:8000/user/sendotp",
+        { 
+          perpous:"forgetpassword",
+          email:emailData.email,
+        }
+        );
+        console.log(data,"data");
       await new Promise((resolve) => setTimeout(resolve, 500));
-      sessionStorage.setItem('email-recovery', data.email);
+      sessionStorage.setItem('email-recovery',emailData.email);
+      sessionStorage.setItem('otpId-recovery',data.data._id);
       navigate(PATH_AUTH.newPassword);
     } catch (error) {
       console.error(error);
